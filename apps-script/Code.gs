@@ -129,7 +129,7 @@ function bridgeResponse_(requestId, ok, data) {
   return HtmlService
     .createHtmlOutput(
       '<!doctype html><html><body><script>' +
-      'window.parent.postMessage(' + json + ', "*");' +
+      'window.top.postMessage(' + json + ', "*");' +
       '</script></body></html>'
     )
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
