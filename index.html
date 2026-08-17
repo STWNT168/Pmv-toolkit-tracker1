@@ -8,7 +8,7 @@
 </style></head>
 <body>
 <div class="wrap">
-<div id="config" class="card"><h2>Backend setup</h2><p class="muted">Enter the deployed Google Apps Script Web App <b>/exec</b> URL. It is saved only in this browser.</p><input id="backendUrl" placeholder="https://script.google.com/macros/s/.../exec"><br><br><button onclick="saveBackend()">Save Backend URL</button></div>
+<div id="config" class="card"><h2>Backend setup</h2><p class="muted">Enter the deployed Google Apps Script Web App <b>/exec</b> URL. It is saved only in this browser.</p><input id="backendUrl" placeholder="https://script.google.com/macros/s/AKfycbzdTwEfyuolUkyr9ME0_4u4iQmED25GMvyqqBcHFFPwehX355nCwn4jFhbmF7ILVHaD/exec"><br><br><button onclick="saveBackend()">Save Backend URL</button></div>
 <div id="login" class="card hidden"><h1>SPM Tool Kits Daily Reporting</h1><p class="muted">Login with Employee ID and registered phone number.</p><div id="loginErr" class="error hidden"></div><div class="grid"><div><label>Employee ID</label><input id="employeeId" autocomplete="username"></div><div><label>Phone Number</label><input id="phone" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel"></div></div><br><button onclick="doLogin()">Login</button></div>
 <div id="app" class="hidden">
 <div class="card brand"><div><h1>Tool Kit Reporting Portal</h1><div id="who" class="muted"></div></div><div class="actions"><button class="secondary" onclick="initView()">Refresh</button><button class="danger" onclick="doLogout()">Logout</button></div></div>
