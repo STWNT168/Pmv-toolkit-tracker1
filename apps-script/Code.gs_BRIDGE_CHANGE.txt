@@ -1,0 +1,15 @@
+EDIT EXISTING: apps-script/Code.gs
+
+Find this exact line inside bridgeResponse_():
+
+    window.parent.postMessage(' + json + ', "*");
+
+Replace it with:
+
+    window.top.postMessage(' + json + ', "*");
+
+Do NOT create a second bridgeResponse_() function in Code.gs.
+After saving, create a NEW Apps Script web-app deployment/version.
+
+Why:
+Apps Script HTMLService now runs in IFRAME sandbox mode. The old parent-window bridge can stop the GitHub Pages iframe from receiving the response, producing the 30-second timeout.
