@@ -1,5 +1,5 @@
-# Never commit real credentials or local deployment files
-.clasp.json
-*.local.*
+.DS_Store
+Thumbs.db
+*.log
+node_modules/
 .env
-.env.*

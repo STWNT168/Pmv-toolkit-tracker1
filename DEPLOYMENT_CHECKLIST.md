@@ -1,22 +1,19 @@
-# v5 Deployment Checklist
+# PMV Toolkit Tracker Deployment Checklist
 
-- [ ] Create Google Sheet
-- [ ] Set Apps Script `SPREADSHEET_ID`
-- [ ] Run `setupWorkbook()`
-- [ ] Populate `OFFICE_MASTER`
-- [ ] Populate `USER_SET`
-- [ ] Deploy Apps Script Web App
-- [ ] Copy `/exec` URL
-- [ ] Upload files to GitHub repository root
-- [ ] Confirm `index.html` is at root
-- [ ] Enable GitHub Pages via Actions
-- [ ] Configure Apps Script URL in the website
-- [ ] Test SPM login and automatic office/SOL mapping
-- [ ] Test kit reconciliation
-- [ ] Test article reconciliation
-- [ ] Test duplicate submission
-- [ ] Test Admin consolidated totals
-- [ ] Test office-wise all-field report
-- [ ] Test pending offices
-- [ ] Test session/IP audit
-- [ ] Test CSV export
+- [ ] Create Google Sheet.
+- [ ] Add `SPREADSHEET_ID` to Apps Script Script Properties.
+- [ ] Run `setupWorkbook()`.
+- [ ] Verify `OFFICE_MASTER`.
+- [ ] Populate `USER_SET`.
+- [ ] Deploy Apps Script as Web App.
+- [ ] Copy `/exec` URL.
+- [ ] Put `/exec` URL in `js/config.js`.
+- [ ] Do not put passwords or API secrets in GitHub.
+- [ ] Enable GitHub Pages.
+- [ ] Test SPM login.
+- [ ] Test valid kit/article reconciliation.
+- [ ] Test duplicate submission blocking.
+- [ ] Test Admin dashboard.
+- [ ] Test date/office filters.
+- [ ] Test CSV export.
+- [ ] Test session audit.

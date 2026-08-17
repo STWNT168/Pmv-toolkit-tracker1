@@ -1,113 +1,605 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SPM Tool Kits Daily Reporting — Consolidated Admin</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PMV Toolkit Tracker</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#f3f6fb;color:#172033}.wrap{max-width:1250px;margin:auto;padding:18px}.card{background:#fff;border-radius:14px;padding:20px;margin:14px 0;box-shadow:0 5px 22px rgba(0,0,0,.07)}h1,h2,h3{margin-top:0}.muted{color:#667085}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{background:#f7f9fc;border-radius:10px;padding:14px}.stat b{display:block;font-size:25px;margin-bottom:4px}.stat small{color:#667085}label{display:block;font-weight:700;margin-bottom:6px}input,select,button{font:inherit}input,select{width:100%;padding:11px;border:1px solid #ccd3df;border-radius:8px;background:#fff}button{padding:11px 16px;border:0;border-radius:8px;background:#1d4ed8;color:#fff;font-weight:700;cursor:pointer}button.secondary{background:#475569}button.danger{background:#b42318}button:disabled{opacity:.5;cursor:not-allowed}.actions{display:flex;gap:9px;flex-wrap:wrap}.hidden{display:none}.error,.success,.info{padding:11px;border-radius:8px;margin:10px 0}.error{background:#fee4e2;color:#9b1c1c}.success{background:#dcfae6;color:#166534}.info{background:#e8f1ff;color:#174ea6}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:8px;border-bottom:1px solid #e7ebf0;text-align:left;white-space:nowrap}th{background:#f8fafc}.brand{display:flex;justify-content:space-between;gap:12px;align-items:center}.section-title{display:flex;justify-content:space-between;gap:10px;align-items:center}.pill{display:inline-block;padding:4px 8px;border-radius:99px;background:#eef2ff;font-size:12px;font-weight:700}.bar-row{display:grid;grid-template-columns:180px 1fr 70px;gap:10px;align-items:center;margin:10px 0}.bar{height:12px;background:#e5e7eb;border-radius:99px;overflow:hidden}.bar>span{display:block;height:100%;background:#1d4ed8}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}.notice{font-size:13px}.nowrap{white-space:nowrap}@media(max-width:900px){.grid,.stats,.two-col{grid-template-columns:1fr}.wrap{padding:10px}.brand{align-items:flex-start;flex-direction:column}.bar-row{grid-template-columns:130px 1fr 55px}}
-</style></head>
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Arial,sans-serif;background:#f3f6fb;color:#172033}
+.wrap{max-width:1280px;margin:auto;padding:18px}
+.card{background:#fff;border-radius:14px;padding:20px;margin:14px 0;box-shadow:0 5px 22px rgba(0,0,0,.07)}
+h1,h2,h3{margin-top:0}
+.muted{color:#667085}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.stat{background:#f7f9fc;border-radius:10px;padding:14px}
+.stat b{display:block;font-size:25px;margin-bottom:4px}
+.stat small{color:#667085}
+label{display:block;font-weight:700;margin-bottom:6px}
+input,select,button{font:inherit}
+input,select{width:100%;padding:11px;border:1px solid #ccd3df;border-radius:8px;background:#fff}
+button{padding:11px 16px;border:0;border-radius:8px;background:#1d4ed8;color:#fff;font-weight:700;cursor:pointer}
+button.secondary{background:#475569}
+button.danger{background:#b42318}
+button:disabled{opacity:.5;cursor:not-allowed}
+.actions{display:flex;gap:9px;flex-wrap:wrap}
+.hidden{display:none!important}
+.error,.success,.info{padding:11px;border-radius:8px;margin:10px 0}
+.error{background:#fee4e2;color:#9b1c1c}
+.success{background:#dcfae6;color:#166534}
+.info{background:#e8f1ff;color:#174ea6}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:8px;border-bottom:1px solid #e7ebf0;text-align:left;white-space:nowrap}
+th{background:#f8fafc}
+.brand{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.section-title{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.pill{display:inline-block;padding:4px 8px;border-radius:99px;background:#eef2ff;font-size:12px;font-weight:700}
+.bar-row{display:grid;grid-template-columns:220px 1fr 70px;gap:10px;align-items:center;margin:10px 0}
+.bar{height:12px;background:#e5e7eb;border-radius:99px;overflow:hidden}
+.bar>span{display:block;height:100%;background:#1d4ed8}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.notice{font-size:13px}
+.small{font-size:12px}
+@media(max-width:900px){
+ .grid,.stats,.two-col{grid-template-columns:1fr}
+ .wrap{padding:10px}
+ .brand{align-items:flex-start;flex-direction:column}
+ .bar-row{grid-template-columns:140px 1fr 55px}
+}
+</style>
+<script src="js/config.js"></script>
+</head>
 <body>
 <div class="wrap">
-<div id="config" class="card"><h2>Backend setup</h2><p class="muted">Enter the deployed Google Apps Script Web App <b>/exec</b> URL. It is saved only in this browser.</p><input id="backendUrl" placeholder="https://script.google.com/macros/s/AKfycbzdTwEfyuolUkyr9ME0_4u4iQmED25GMvyqqBcHFFPwehX355nCwn4jFhbmF7ILVHaD/exec"><br><br><button onclick="saveBackend()">Save Backend URL</button></div>
-<div id="login" class="card hidden"><h1>SPM Tool Kits Daily Reporting</h1><p class="muted">Login with Employee ID and registered phone number.</p><div id="loginErr" class="error hidden"></div><div class="grid"><div><label>Employee ID</label><input id="employeeId" autocomplete="username"></div><div><label>Phone Number</label><input id="phone" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel"></div></div><br><button onclick="doLogin()">Login</button></div>
+
+<div id="setup" class="card hidden">
+  <h2>Backend configuration</h2>
+  <p class="muted">
+    Add the Apps Script deployed <b>/exec</b> URL in
+    <code>js/config.js</code>. No spreadsheet access is performed by
+    the frontend.
+  </p>
+  <div id="setupMsg" class="info"></div>
+</div>
+
+<div id="login" class="card hidden">
+  <h1>PMV Toolkit Tracker</h1>
+  <p class="muted">Login with Employee ID and registered phone number.</p>
+  <div id="loginErr" class="error hidden"></div>
+  <div class="grid">
+    <div>
+      <label>Employee ID</label>
+      <input id="employeeId" autocomplete="username">
+    </div>
+    <div>
+      <label>Phone Number</label>
+      <input id="phone" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel">
+    </div>
+  </div>
+  <br>
+  <button id="loginBtn" onclick="doLogin()">Login</button>
+</div>
+
 <div id="app" class="hidden">
-<div class="card brand"><div><h1>Tool Kit Reporting Portal</h1><div id="who" class="muted"></div></div><div class="actions"><button class="secondary" onclick="initView()">Refresh</button><button class="danger" onclick="doLogout()">Logout</button></div></div>
-
-<div id="spmView" class="hidden">
-  <div class="card"><div class="section-title"><h2>SPM Dashboard</h2><span class="pill">SPM</span></div><div class="grid"><div><label>SOL ID</label><input id="solId" readonly></div><div><label>Office Name</label><input id="officeName" readonly></div></div><div id="spmMsg" class="hidden"></div></div>
-  <div class="card"><h2>Today's Tool Kit Position</h2><p class="notice muted">Enter both kit and article figures. The server checks both totals before accepting the report.</p>
-    <div class="grid">
-      <div><label>All Kits / Total Number of Kits</label><input id="allKits" type="number" min="0"></div>
-      <div><label>Similar Article / Tool Kits Article</label><input id="similarArticle" type="number" min="0"></div>
-    </div><br>
-    <div class="two-col">
-      <div><h3>Kit counts</h3><div class="grid">
-        <div><label>Invalid Mobile — Kits</label><input id="invalidMobileKits" type="number" min="0"></div>
-        <div><label>Deliverable — Kits</label><input id="deliverableKits" type="number" min="0"></div>
-        <div><label>Incomplete — Kits</label><input id="incompleteKits" type="number" min="0"></div>
-        <div><label>Without Proper Details/Address — Kits</label><input id="withoutProperDetailsKits" type="number" min="0"></div>
-      </div></div>
-      <div><h3>Article counts</h3><div class="grid">
-        <div><label>Invalid Mobile — Articles</label><input id="invalidMobileArticles" type="number" min="0"></div>
-        <div><label>Deliverable — Articles</label><input id="deliverableArticles" type="number" min="0"></div>
-        <div><label>Incomplete — Articles</label><input id="incompleteArticles" type="number" min="0"></div>
-        <div><label>Without Proper Details/Address — Articles</label><input id="withoutProperDetailsArticles" type="number" min="0"></div>
-      </div></div>
-    </div><br><button id="submitBtn" onclick="submitReport()">Submit Today's Report</button>
+  <div class="card brand">
+    <div>
+      <h1>Tool Kit Reporting Portal</h1>
+      <div id="who" class="muted"></div>
+    </div>
+    <div class="actions">
+      <button class="secondary" onclick="initView()">Refresh</button>
+      <button class="danger" onclick="doLogout()">Logout</button>
+    </div>
   </div>
-  <div class="card"><div class="section-title"><h2>My Previous Submissions</h2><button class="secondary" onclick="loadMyRecords()">Refresh</button></div><div class="table-wrap"><table id="myTable"></table></div></div>
+
+  <div id="spmView" class="hidden">
+    <div class="card">
+      <div class="section-title">
+        <h2>SPM Dashboard</h2><span class="pill">SPM</span>
+      </div>
+      <div class="grid">
+        <div><label>SOL ID</label><input id="solId" readonly></div>
+        <div><label>Office Name</label><input id="officeName" readonly></div>
+      </div>
+      <div id="spmMsg" class="hidden"></div>
+    </div>
+
+    <div class="card">
+      <h2>Today's Tool Kit Position</h2>
+      <p class="notice muted">
+        All totals are validated again on the server before acceptance.
+      </p>
+
+      <div class="grid">
+        <div><label>All Kits / Total Number of Kits</label><input id="allKits" type="number" min="0"></div>
+        <div><label>Similar Article / Tool Kits Article</label><input id="similarArticle" type="number" min="0"></div>
+      </div><br>
+
+      <div class="two-col">
+        <div>
+          <h3>Kit counts</h3>
+          <div class="grid">
+            <div><label>Invalid Mobile — Kits</label><input id="invalidMobileKits" type="number" min="0"></div>
+            <div><label>Deliverable — Kits</label><input id="deliverableKits" type="number" min="0"></div>
+            <div><label>Incomplete — Kits</label><input id="incompleteKits" type="number" min="0"></div>
+            <div><label>Without Proper Details/Address — Kits</label><input id="withoutProperDetailsKits" type="number" min="0"></div>
+          </div>
+        </div>
+        <div>
+          <h3>Article counts</h3>
+          <div class="grid">
+            <div><label>Invalid Mobile — Articles</label><input id="invalidMobileArticles" type="number" min="0"></div>
+            <div><label>Deliverable — Articles</label><input id="deliverableArticles" type="number" min="0"></div>
+            <div><label>Incomplete — Articles</label><input id="incompleteArticles" type="number" min="0"></div>
+            <div><label>Without Proper Details/Address — Articles</label><input id="withoutProperDetailsArticles" type="number" min="0"></div>
+          </div>
+        </div>
+      </div><br>
+
+      <button id="submitBtn" onclick="submitReport()">Submit Today's Report</button>
+    </div>
+
+    <div class="card">
+      <div class="section-title">
+        <h2>My Previous Submissions</h2>
+        <button class="secondary" onclick="loadMyRecords()">Refresh</button>
+      </div>
+      <div class="table-wrap"><table id="myTable"></table></div>
+    </div>
+  </div>
+
+  <div id="adminView" class="hidden">
+    <div class="card">
+      <div class="section-title">
+        <h2>Admin Dashboard</h2><span class="pill">ADMIN</span>
+      </div>
+      <div class="grid">
+        <div><label>From</label><input id="fromDate" type="date"></div>
+        <div><label>To</label><input id="toDate" type="date"></div>
+        <div><label>Specific Date</label><input id="specificDate" type="date"></div>
+        <div><label>Office</label><select id="filterSol"><option value="">All offices</option></select></div>
+      </div><br>
+      <div class="actions">
+        <button onclick="loadDashboard()">Load Dashboard</button>
+        <button class="secondary" onclick="downloadCsv()">Export CSV</button>
+        <button class="secondary" onclick="loadSessions()">View Sessions</button>
+      </div>
+    </div>
+
+    <div id="adminMsg" class="hidden"></div>
+
+    <div class="card">
+      <h2>Consolidated Kit & Article Report</h2>
+      <p class="notice muted">Totals are calculated server-side from DAILY_RECORD.</p>
+      <div class="stats" id="stats"></div>
+      <div class="table-wrap" style="margin-top:14px">
+        <table id="consolidatedTable"></table>
+      </div>
+    </div>
+
+    <div class="card"><h2>Field-wise Summary</h2><div id="bars"></div></div>
+    <div class="card"><h2>Office-wise Consolidated Report</h2><div class="table-wrap"><table id="reportTable"></table></div></div>
+    <div class="card"><h2>Offices Not Submitted</h2><div class="table-wrap"><table id="pendingTable"></table></div></div>
+    <div class="card"><h2>Session Audit</h2><div class="table-wrap"><table id="sessionTable"></table></div></div>
+  </div>
 </div>
 
-<div id="adminView" class="hidden">
-  <div class="card"><div class="section-title"><h2>Admin Dashboard</h2><span class="pill">ADMIN</span></div>
-    <div class="grid"><div><label>From</label><input id="fromDate" type="date"></div><div><label>To</label><input id="toDate" type="date"></div><div><label>Specific Date</label><input id="specificDate" type="date"></div><div><label>Office</label><select id="filterSol"><option value="">All offices</option></select></div></div><br>
-    <div class="actions"><button onclick="loadDashboard()">Load Dashboard</button><button class="secondary" onclick="downloadCsv()">Export CSV</button><button class="secondary" onclick="loadSessions()">View Sessions</button></div>
-  </div>
-  <div id="adminMsg" class="hidden"></div>
-  <div class="card"><h2>Consolidated Kit & Article Report</h2>
-    <p class="notice muted">All figures below are calculated on the Apps Script server from DAILY_RECORD for the selected date/filter.</p>
-    <div class="stats" id="stats"></div>
-    <div class="table-wrap" style="margin-top:14px"><table id="consolidatedTable"></table></div>
-  </div>
-  <div class="card"><h2>Field-wise Summary</h2><div id="bars"></div></div>
-  <div class="card"><h2>Office-wise Consolidated Report</h2><div class="table-wrap"><table id="reportTable"></table></div></div>
-  <div class="card"><h2>Offices Not Submitted</h2><div class="table-wrap"><table id="pendingTable"></table></div></div>
-  <div class="card"><h2>Session Audit</h2><div class="table-wrap"><table id="sessionTable"></table></div></div>
-</div>
-</div></div>
 <iframe id="bridge" name="bridge" style="display:none"></iframe>
+
 <script>
-const KEY='spmBackendUrl';let state={session:null,ip:'Unavailable'},pending={};
-const $=id=>document.getElementById(id);const show=(id,on=true)=>$(id).classList.toggle('hidden',!on);const msg=(id,t,c)=>{let x=$(id);x.className=c;x.textContent=t;show(id,true)};
-function saveBackend(){let u=$('backendUrl').value.trim();if(!/^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec(?:\?.*)?$/.test(u)){alert('Enter the deployed Apps Script /exec URL.');return}localStorage.setItem(KEY,u);show('config',false);show('login',true)}
-function backend(){return localStorage.getItem(KEY)||''}function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function request(action,payload){return new Promise((resolve,reject)=>{if(!backend())return reject(new Error('Backend URL not configured.'));const id=crypto.randomUUID();pending[id]={resolve,reject};const f=document.createElement('form');f.method='POST';f.action=backend();f.target='bridge';f.style.display='none';[['action',action],['requestId',id],['payload',JSON.stringify(payload||{})]].forEach(([n,v])=>{const i=document.createElement('input');i.name=n;i.value=v;f.appendChild(i)});document.body.appendChild(f);f.submit();f.remove();setTimeout(()=>{if(pending[id]){delete pending[id];reject(new Error('Request timed out. Check Apps Script deployment.'))}},30000)})}
-window.addEventListener('message',e=>{let d=e.data;if(!d||!d.requestId||!pending[d.requestId])return;let p=pending[d.requestId];delete pending[d.requestId];d.ok?p.resolve(d.data):p.reject(new Error(d.data&&d.data.message||'Request failed'))});
-async function getIp(){try{return await fetch('https://api.ipify.org?format=json',{cache:'no-store'}).then(r=>r.json()).then(x=>x.ip)}catch(e){return'Unavailable'}}
-async function doLogin(){show('loginErr',false);let emp=$('employeeId').value.trim(),phone=$('phone').value.replace(/\D/g,'');if(!emp||phone.length!==10){msg('loginErr','Enter Employee ID and 10-digit phone number.','error');return}try{state.ip=await getIp();let res=await request('login',{employeeId:emp,phone,ip:state.ip,userAgent:navigator.userAgent});state.session=res;sessionStorage.setItem('spmSession',JSON.stringify(res));show('login',false);show('app',true);initView()}catch(e){msg('loginErr',e.message,'error')}}
-function initView(){let s=state.session;if(!s)return;if(new Date(s.expiresAt)<=new Date()){sessionStorage.removeItem('spmSession');location.reload();return}$('who').textContent=`${s.name||s.employeeId} • ${s.officeName} • SOL ID ${s.solId} • Session valid until ${new Date(s.expiresAt).toLocaleString()}`;if(s.role==='ADMIN'){show('spmView',false);show('adminView',true);loadOffices();loadDashboard()}else{show('adminView',false);show('spmView',true);$('solId').value=s.solId;$('officeName').value=s.officeName;checkToday();loadMyRecords()}}
-function fieldIds(){return ['allKits','similarArticle','invalidMobileKits','invalidMobileArticles','deliverableKits','deliverableArticles','incompleteKits','incompleteArticles','withoutProperDetailsKits','withoutProperDetailsArticles']}
-function fillRecord(x){fieldIds().forEach(k=>{$(k).value=x[k]??'';$(k).disabled=true});$('submitBtn').disabled=true}
-async function checkToday(){try{let r=await request('getTodayStatus',{sessionId:state.session.sessionId});if(r.submitted){fillRecord(r.record);msg('spmMsg','Today’s report is already submitted. Duplicate submission is blocked by the server.','success')}}catch(e){handleError(e,'spmMsg')}}
-async function loadMyRecords(){try{let rows=await request('getMyRecords',{sessionId:state.session.sessionId,limit:30});let cols=['reportDate','allKits','similarArticle','invalidMobileKits','invalidMobileArticles','deliverableKits','deliverableArticles','incompleteKits','incompleteArticles','withoutProperDetailsKits','withoutProperDetailsArticles','status'];$('myTable').innerHTML='<tr>'+cols.map(c=>`<th>${c}</th>`).join('')+'</tr>'+(rows.length?rows.map(r=>'<tr>'+cols.map(c=>`<td>${esc(r[c])}</td>`).join('')+'</tr>').join(''):'<tr><td colspan="12">No previous submissions.</td></tr>')}catch(e){handleError(e,'spmMsg')}}
-async function submitReport(){let report={};fieldIds().forEach(k=>report[k]=$(k).value);report.ip=state.ip;$('submitBtn').disabled=true;try{let r=await request('submitDaily',{sessionId:state.session.sessionId,report});msg('spmMsg',r.message,'success');fillRecord(r.record);loadMyRecords()}catch(e){$('submitBtn').disabled=false;handleError(e,'spmMsg')}}
-async function loadOffices(){try{let list=await request('getOffices',{sessionId:state.session.sessionId});$('filterSol').innerHTML='<option value="">All offices</option>'+list.map(o=>`<option value="${esc(o.solId)}">${esc(o.officeName)} — ${esc(o.solId)}</option>`).join('')}catch(e){handleError(e,'adminMsg')}}
-function filters(){return{from:$('fromDate').value,to:$('toDate').value,date:$('specificDate').value,solId:$('filterSol').value}}
-async async function loadDashboard(){try{
-  let r=await request('adminSummary',{sessionId:state.session.sessionId,filters:filters()});
-  let t=r.totals;
-  $('stats').innerHTML=[
-    ['Total Offices',r.totalOffices],['Submitted Offices',r.submittedOfficeCount],
-    ['Pending Offices',r.pendingOfficeCount || r.pendingOffices.length],['All Kits',t.allKits],
-    ['Tool Kit Articles',t.similarArticle]
-  ].map(x=>`<div class="stat"><b>${esc(x[1])}</b><small>${esc(x[0])}</small></div>`).join('');
+'use strict';
 
-  let fields=[
-    ['Total / Overall',t.allKits,t.similarArticle],
-    ['Invalid Mobile',t.invalid,t.invalidArticles],
-    ['Deliverable',t.deliverable,t.deliverableArticles],
-    ['Incomplete',t.incomplete,t.incompleteArticles],
-    ['Without Proper Details / Address',t.details,t.detailsArticles]
+const CFG = window.PMV_CONFIG;
+let state = {session:null, ip:'Unavailable'};
+const pending = new Map();
+
+const $ = id => document.getElementById(id);
+
+function show(id,on=true){ $(id).classList.toggle('hidden',!on); }
+
+function msg(id,text,cls){
+  const el=$(id);
+  el.className=cls;
+  el.textContent=text;
+  show(id,true);
+}
+
+function configuredUrl(){
+  const configured=String(CFG.APP_SCRIPT_API_URL||'').trim();
+  const saved=String(localStorage.getItem(CFG.BACKEND_STORAGE_KEY)||'').trim();
+  if(CFG.ALLOW_BACKEND_OVERRIDE && saved) return saved;
+  return configured;
+}
+
+function validBackend(url){
+  return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec(?:\?.*)?$/.test(url);
+}
+
+function request(action,payload){
+  return new Promise((resolve,reject)=>{
+    const url=configuredUrl();
+    if(!validBackend(url)){
+      reject(new Error('Apps Script /exec URL is not configured in js/config.js.'));
+      return;
+    }
+
+    const requestId=(crypto&&crypto.randomUUID)?crypto.randomUUID():
+      String(Date.now())+'-'+Math.random().toString(36).slice(2);
+
+    pending.set(requestId,{resolve,reject});
+
+    const form=document.createElement('form');
+    form.method='POST';
+    form.action=url;
+    form.target='bridge';
+    form.style.display='none';
+
+    [['action',action],['requestId',requestId],['payload',JSON.stringify(payload||{})]]
+      .forEach(([name,value])=>{
+        const input=document.createElement('input');
+        input.name=name;
+        input.value=value;
+        form.appendChild(input);
+      });
+
+    document.body.appendChild(form);
+    form.submit();
+    form.remove();
+
+    setTimeout(()=>{
+      if(pending.has(requestId)){
+        pending.delete(requestId);
+        reject(new Error('Request timed out. Check Apps Script deployment and URL.'));
+      }
+    }, Number(CFG.REQUEST_TIMEOUT_MS)||30000);
+  });
+}
+
+window.addEventListener('message',event=>{
+  if(event.source!==$('bridge').contentWindow) return;
+
+  const data=event.data;
+  if(!data || !data.requestId || !pending.has(data.requestId)) return;
+
+  const p=pending.get(data.requestId);
+  pending.delete(data.requestId);
+
+  if(data.ok) p.resolve(data.data);
+  else p.reject(new Error(data.data && data.data.message || 'Request failed.'));
+});
+
+function esc(value){
+  return String(value==null?'':value).replace(/[&<>"']/g,m=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[m]));
+}
+
+function fieldIds(){
+  return [
+    'allKits','similarArticle',
+    'invalidMobileKits','invalidMobileArticles',
+    'deliverableKits','deliverableArticles',
+    'incompleteKits','incompleteArticles',
+    'withoutProperDetailsKits','withoutProperDetailsArticles'
   ];
-  $('consolidatedTable').innerHTML='<tr><th>Field</th><th>Kits</th><th>Articles</th></tr>'+
-    fields.map(x=>`<tr><td><b>${esc(x[0])}</b></td><td>${esc(x[1])}</td><td>${esc(x[2])}</td></tr>`).join('');
+}
 
-  let kitMax=Math.max(1,t.allKits), articleMax=Math.max(1,t.similarArticle);
-  $('bars').innerHTML=fields.slice(1).map(x=>`
-    <div class="bar-row"><b>${esc(x[0])} Kits</b><div class="bar"><span style="width:${Math.round(x[1]/kitMax*100)}%"></span></div><span>${esc(x[1])}</span></div>
-    <div class="bar-row"><b>${esc(x[0])} Articles</b><div class="bar"><span style="width:${Math.round(x[2]/articleMax*100)}%"></span></div><span>${esc(x[2])}</span></div>`).join('');
+function getStoredSession(){
+  try{
+    const raw=sessionStorage.getItem(CFG.SESSION_STORAGE_KEY);
+    return raw?JSON.parse(raw):null;
+  }catch(e){return null;}
+}
 
-  let cols=['reportDate','employeeId','solId','officeName','allKits','invalidMobileKits','deliverableKits','incompleteKits','withoutProperDetailsKits','similarArticle','invalidMobileArticles','deliverableArticles','incompleteArticles','withoutProperDetailsArticles','status'];
-  $('reportTable').innerHTML='<tr>'+cols.map(c=>`<th>${esc(c.replace(/([A-Z])/g,' $1'))}</th>`).join('')+'</tr>'+
-    r.rows.map(row=>'<tr>'+cols.map(c=>`<td>${esc(row[c])}</td>`).join('')+'</tr>').join('');
+function persistSession(session){
+  state.session=session;
+  sessionStorage.setItem(CFG.SESSION_STORAGE_KEY,JSON.stringify(session));
+}
 
-  $('pendingTable').innerHTML='<tr><th>SOL ID</th><th>Office</th></tr>'+
-    r.pendingOffices.map(o=>`<tr><td>${esc(o.solId)}</td><td>${esc(o.officeName)}</td></tr>`).join('');
-  if(!r.pendingOffices.length)$('pendingTable').innerHTML+='<tr><td colspan="2">All selected offices have submitted.</td></tr>';
-}catch(e){handleError(e,'adminMsg')}}
-async function loadSessions(){try{let rows=await request('adminSessions',{sessionId:state.session.sessionId,limit:200});let cols=['loginTime','employeeId','role','solId','officeName','ip','status','expiresAt'];$('sessionTable').innerHTML='<tr>'+cols.map(c=>`<th>${c}</th>`).join('')+'</tr>'+rows.map(r=>'<tr>'+cols.map(c=>`<td>${esc(r[c])}</td>`).join('')+'</tr>').join('')}catch(e){handleError(e,'adminMsg')}}
-async function downloadCsv(){try{let csv=await request('exportDailyCsv',{sessionId:state.session.sessionId,filters:filters()});let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='daily_records.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}catch(e){handleError(e,'adminMsg')}}
-function handleError(e,id){if(e.message.includes('Session expired')||e.message.includes('Invalid session')){sessionStorage.removeItem('spmSession');location.reload();return}msg(id||'adminMsg',e.message,'error')}
-async function doLogout(){try{if(state.session)await request('logout',{sessionId:state.session.sessionId})}catch(e){}sessionStorage.removeItem('spmSession');location.reload()}
-(function boot(){let u=localStorage.getItem(KEY);if(u){$('backendUrl').value=u;show('config',false);let s=sessionStorage.getItem('spmSession');if(s){try{state.session=JSON.parse(s);show('app',true);initView()}catch(e){show('login',true)}}else show('login',true)}})();
-</script></body></html>
+function clearSession(){
+  state.session=null;
+  sessionStorage.removeItem(CFG.SESSION_STORAGE_KEY);
+}
+
+async function getIp(){
+  try{
+    const r=await fetch('https://api.ipify.org?format=json',{cache:'no-store'});
+    if(!r.ok) throw new Error();
+    const data=await r.json();
+    return String(data.ip||'Unavailable').slice(0,100);
+  }catch(e){return 'Unavailable';}
+}
+
+async function doLogin(){
+  show('loginErr',false);
+  const employeeId=$('employeeId').value.trim();
+  const phone=$('phone').value.replace(/\D/g,'');
+
+  if(!employeeId || phone.length!==10){
+    msg('loginErr','Enter Employee ID and 10-digit phone number.','error');
+    return;
+  }
+
+  $('loginBtn').disabled=true;
+
+  try{
+    state.ip=await getIp();
+    const result=await request('login',{
+      employeeId,phone,ip:state.ip,userAgent:navigator.userAgent
+    });
+
+    persistSession(result);
+    show('login',false);
+    show('setup',false);
+    show('app',true);
+    initView();
+  }catch(e){
+    msg('loginErr',e.message,'error');
+  }finally{
+    $('loginBtn').disabled=false;
+  }
+}
+
+function initView(){
+  const s=state.session;
+  if(!s) return;
+
+  if(!s.expiresAt || new Date(s.expiresAt)<=new Date()){
+    clearSession();
+    location.reload();
+    return;
+  }
+
+  $('who').textContent=
+    `${s.name||s.employeeId} • ${s.officeName} • SOL ID ${s.solId} • `+
+    `Session valid until ${new Date(s.expiresAt).toLocaleString()}`;
+
+  if(String(s.role).toUpperCase()==='ADMIN'){
+    show('spmView',false);
+    show('adminView',true);
+    loadOffices();
+    loadDashboard();
+  }else{
+    show('adminView',false);
+    show('spmView',true);
+    $('solId').value=s.solId;
+    $('officeName').value=s.officeName;
+    checkToday();
+    loadMyRecords();
+  }
+}
+
+function fillRecord(record){
+  fieldIds().forEach(k=>{
+    $(k).value=record[k] ?? '';
+    $(k).disabled=true;
+  });
+  $('submitBtn').disabled=true;
+}
+
+async function checkToday(){
+  try{
+    const result=await request('getTodayStatus',{sessionId:state.session.sessionId});
+    if(result.submitted){
+      fillRecord(result.record);
+      msg(
+        'spmMsg',
+        'Today’s report is already submitted. Duplicate submission is blocked by the server.',
+        'success'
+      );
+    }
+  }catch(e){handleError(e,'spmMsg');}
+}
+
+async function loadMyRecords(){
+  try{
+    const rows=await request('getMyRecords',{
+      sessionId:state.session.sessionId,limit:30
+    });
+
+    const cols=[
+      'reportDate','allKits','similarArticle',
+      'invalidMobileKits','invalidMobileArticles',
+      'deliverableKits','deliverableArticles',
+      'incompleteKits','incompleteArticles',
+      'withoutProperDetailsKits','withoutProperDetailsArticles','status'
+    ];
+
+    $('myTable').innerHTML=
+      '<tr>'+cols.map(c=>`<th>${esc(c)}</th>`).join('')+'</tr>'+
+      (rows.length?
+        rows.map(r=>'<tr>'+cols.map(c=>`<td>${esc(r[c])}</td>`).join('')+'</tr>').join(''):
+        '<tr><td colspan="12">No previous submissions.</td></tr>');
+  }catch(e){handleError(e,'spmMsg');}
+}
+
+async function submitReport(){
+  const report={};
+  fieldIds().forEach(k=>report[k]=$(k).value);
+  report.ip=state.ip;
+
+  $('submitBtn').disabled=true;
+
+  try{
+    const result=await request('submitDaily',{
+      sessionId:state.session.sessionId,report
+    });
+    msg('spmMsg',result.message,'success');
+    fillRecord(result.record);
+    loadMyRecords();
+  }catch(e){
+    $('submitBtn').disabled=false;
+    handleError(e,'spmMsg');
+  }
+}
+
+async function loadOffices(){
+  try{
+    const list=await request('getOffices',{sessionId:state.session.sessionId});
+    $('filterSol').innerHTML=
+      '<option value="">All offices</option>'+
+      list.map(o=>`<option value="${esc(o.solId)}">${esc(o.officeName)} — ${esc(o.solId)}</option>`).join('');
+  }catch(e){handleError(e,'adminMsg');}
+}
+
+function filters(){
+  return {
+    from:$('fromDate').value,
+    to:$('toDate').value,
+    date:$('specificDate').value,
+    solId:$('filterSol').value
+  };
+}
+
+async function loadDashboard(){
+  try{
+    const r=await request('adminSummary',{
+      sessionId:state.session.sessionId,filters:filters()
+    });
+
+    const t=r.totals;
+
+    $('stats').innerHTML=[
+      ['Total Offices',r.totalOffices],
+      ['Submitted Offices',r.submittedOfficeCount],
+      ['Pending Offices',r.pendingOfficeCount],
+      ['All Kits',t.allKits],
+      ['Tool Kit Articles',t.similarArticle]
+    ].map(x=>`<div class="stat"><b>${esc(x[1])}</b><small>${esc(x[0])}</small></div>`).join('');
+
+    const fields=[
+      ['Invalid Mobile',t.invalid,t.invalidArticles],
+      ['Deliverable',t.deliverable,t.deliverableArticles],
+      ['Incomplete',t.incomplete,t.incompleteArticles],
+      ['Without Proper Details / Address',t.details,t.detailsArticles]
+    ];
+
+    $('consolidatedTable').innerHTML=
+      '<tr><th>Field</th><th>Kits</th><th>Articles</th></tr>'+
+      fields.map(x=>`<tr><td><b>${esc(x[0])}</b></td><td>${esc(x[1])}</td><td>${esc(x[2])}</td></tr>`).join('');
+
+    const kitMax=Math.max(1,t.allKits);
+    const articleMax=Math.max(1,t.similarArticle);
+
+    $('bars').innerHTML=fields.map(x=>{
+      const kp=Math.round((x[1]/kitMax)*100);
+      const ap=Math.round((x[2]/articleMax)*100);
+      return `<div class="bar-row"><span>${esc(x[0])} — Kits</span><div class="bar"><span style="width:${kp}%"></span></div><b>${esc(x[1])}</b></div>`+
+             `<div class="bar-row"><span>${esc(x[0])} — Articles</span><div class="bar"><span style="width:${ap}%"></span></div><b>${esc(x[2])}</b></div>`;
+    }).join('');
+
+    const cols=[
+      'reportDate','employeeId','solId','officeName',
+      'allKits','similarArticle',
+      'invalidMobileKits','invalidMobileArticles',
+      'deliverableKits','deliverableArticles',
+      'incompleteKits','incompleteArticles',
+      'withoutProperDetailsKits','withoutProperDetailsArticles','status'
+    ];
+
+    $('reportTable').innerHTML=
+      '<tr>'+cols.map(c=>`<th>${esc(c)}</th>`).join('')+'</tr>'+
+      (r.rows.length?
+        r.rows.map(row=>'<tr>'+cols.map(c=>`<td>${esc(row[c])}</td>`).join('')+'</tr>').join(''):
+        '<tr><td colspan="15">No records for the selected filter.</td></tr>');
+
+    $('pendingTable').innerHTML=
+      '<tr><th>SOL ID</th><th>Office</th></tr>'+
+      (r.pendingOffices.length?
+        r.pendingOffices.map(o=>`<tr><td>${esc(o.solId)}</td><td>${esc(o.officeName)}</td></tr>`).join(''):
+        '<tr><td colspan="2">All selected offices have submitted.</td></tr>');
+  }catch(e){handleError(e,'adminMsg');}
+}
+
+async function loadSessions(){
+  try{
+    const rows=await request('adminSessions',{
+      sessionId:state.session.sessionId,limit:200
+    });
+
+    const cols=[
+      'loginTime','employeeId','role','solId',
+      'officeName','ip','status','expiresAt'
+    ];
+
+    $('sessionTable').innerHTML=
+      '<tr>'+cols.map(c=>`<th>${esc(c)}</th>`).join('')+
+      '</tr>'+
+      rows.map(r=>'<tr>'+cols.map(c=>`<td>${esc(r[c])}</td>`).join('')+'</tr>').join('');
+  }catch(e){handleError(e,'adminMsg');}
+}
+
+async function downloadCsv(){
+  try{
+    const csv=await request('exportDailyCsv',{
+      sessionId:state.session.sessionId,filters:filters()
+    });
+
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download='pmv_daily_records.csv';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }catch(e){handleError(e,'adminMsg');}
+}
+
+function handleError(e,id){
+  const text=e && e.message ? e.message : String(e);
+
+  if(
+    text.includes('Session expired') ||
+    text.includes('Invalid session') ||
+    text.includes('Unauthorized')
+  ){
+    clearSession();
+    location.reload();
+    return;
+  }
+
+  msg(id||'adminMsg',text,'error');
+}
+
+async function doLogout(){
+  try{
+    if(state.session){
+      await request('logout',{sessionId:state.session.sessionId});
+    }
+  }catch(e){}
+  clearSession();
+  location.reload();
+}
+
+function boot(){
+  const url=configuredUrl();
+
+  if(!validBackend(url)){
+    show('setup',true);
+    msg(
+      'setupMsg',
+      'Configure APP_SCRIPT_API_URL in js/config.js, then redeploy GitHub Pages.',
+      'info'
+    );
+    return;
+  }
+
+  const session=getStoredSession();
+
+  if(session){
+    state.session=session;
+    show('app',true);
+    initView();
+  }else{
+    show('login',true);
+  }
+}
+
+boot();
+</script>
+</body>
+</html>

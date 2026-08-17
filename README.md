@@ -1,67 +1,101 @@
-# SPM Tool Kits Daily Reporting — GitHub Pages v5
+# PMV Toolkit Tracker — Refined Secure Build
 
 ## Architecture
-- Frontend: GitHub Pages, `index.html` at repository root
+
+- Frontend: GitHub Pages
 - Backend: Google Apps Script Web App
 - Database: one Google Sheets workbook
-- Sheets: `OFFICE_MASTER`, `USER_SET`, `DAILY_RECORD`, `SESSION_LOG`
+- Frontend configuration: `js/config.js`
 
-## Main v5 update: Admin consolidated report
-The Admin dashboard now provides a consolidated report across all selected records.
+## Important configuration
 
-### Kits
-- All Kits
-- Invalid Mobile Kits
-- Deliverable Kits
-- Incomplete Kits
-- Without Proper Details/Address Kits
+### 1. Apps Script spreadsheet
 
-### Articles
-- Similar / Tool Kit Articles
-- Invalid Mobile Articles
-- Deliverable Articles
-- Incomplete Articles
-- Without Proper Details/Address Articles
+Open Apps Script → Project Settings → Script Properties and create:
 
-The dashboard also shows:
-- Total offices
-- Submitted offices
-- Pending offices
-- Office-wise report containing every kit and article field
-- Date range / specific date / office filters
-- Session/IP audit
-- CSV export
+`SPREADSHEET_ID = YOUR_GOOGLE_SHEET_ID`
 
-All consolidated totals are calculated server-side from `DAILY_RECORD`.
+The backend deliberately reads the spreadsheet ID from Script Properties instead of trusting a browser request.
 
-## SPM
-- Employee ID + registered phone login
-- Automatic SOL ID and office mapping
-- Separate kit and article fields
-- Server-side reconciliation
-- Server-side duplicate prevention
-- 7-day maximum session
-- Previous submission history
+### 2. Run workbook setup
 
-## Server validation
-`ALL_KITS = Invalid Mobile Kits + Deliverable Kits + Incomplete Kits + Without Proper Details/Address Kits`
+Run `setupWorkbook()` once from Apps Script.
 
-`SIMILAR_ARTICLE = Invalid Mobile Articles + Deliverable Articles + Incomplete Articles + Without Proper Details/Address Articles`
+It creates:
 
-## Deploy
-1. Create a Google Sheet.
-2. Open Extensions → Apps Script.
-3. Copy `apps-script/Code.gs` and `apps-script/appsscript.json`.
-4. Add Script Property `SPREADSHEET_ID` with your Google Sheet ID.
-5. Run `setupWorkbook()` once.
-6. Fill `USER_SET`.
-7. Deploy Apps Script as a Web App.
-8. Copy the `/exec` URL.
-9. Upload this repository to GitHub with `index.html` at the root.
-10. Enable GitHub Pages using the included Actions workflow.
-11. Open the Pages URL and paste the Apps Script `/exec` URL into Backend setup.
+- `OFFICE_MASTER`
+- `USER_SET`
+- `DAILY_RECORD`
+- `SESSION_LOG`
 
-## USER_SET
+Then populate `USER_SET`:
+
 `EMPLOYEE_ID | PHONE | ROLE | SOL_ID | ACTIVE | NAME | SESSION_DAYS`
 
-Use `ROLE=SPM` or `ROLE=ADMIN`. Keep session validity at 7 days or less.
+Use `ROLE=SPM` or `ROLE=ADMIN`.
+
+### 3. Deploy Apps Script
+
+Deploy as Web App:
+
+- Execute as: Me / User deploying the web app
+- Who has access: Anyone
+
+Copy the generated `/exec` URL.
+
+### 4. Configure GitHub Pages
+
+Open:
+
+`js/config.js`
+
+Set:
+
+`APP_SCRIPT_API_URL: 'https://script.google.com/macros/s/XXXXX/exec'`
+
+`SPREADSHEET_ID` is provided as a reference field, but the backend does not use the browser value. Keep the real spreadsheet ID in Apps Script Script Properties.
+
+## Security improvements in this build
+
+- Server-side session validation
+- Role-based SPM/Admin authorization
+- Session expiry capped at 7 days
+- Server-side duplicate submission prevention
+- Script Lock around submission
+- Server-side numeric range validation
+- Server-side kit reconciliation
+- Server-side article reconciliation
+- Login rate limiting
+- Inactive-user blocking
+- Session/IP/user-agent audit
+- HTML escaping on dashboard output
+- Request IDs for iframe responses
+- No direct Google Sheet access from browser
+- No spreadsheet ID used as an authentication credential
+
+## Known inconsistency fixed
+
+The previous frontend contained:
+
+`async async function loadDashboard()`
+
+This is invalid JavaScript and can stop the entire page script from parsing.
+
+The refined build contains:
+
+`async function loadDashboard()`
+
+## Deployment check
+
+1. Configure Script Property `SPREADSHEET_ID`.
+2. Run `setupWorkbook()`.
+3. Fill `USER_SET`.
+4. Deploy Apps Script and copy `/exec`.
+5. Put the `/exec` URL in `js/config.js`.
+6. Push the files to GitHub.
+7. Enable GitHub Pages.
+8. Test SPM login.
+9. Test one valid submission.
+10. Confirm duplicate submission is blocked.
+11. Test Admin login.
+12. Test consolidated report and pending-office list.
