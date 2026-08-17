@@ -1,16 +1,22 @@
-# Deployment Checklist — v3
+# v5 Deployment Checklist
 
-- [ ] Create Google Sheet database workbook.
-- [ ] Add Apps Script files from `apps-script/`.
-- [ ] Set Script Property `SPREADSHEET_ID`.
-- [ ] Run `setupWorkbook()` once.
-- [ ] Confirm `OFFICE_MASTER` contains the required SOL IDs and office names.
-- [ ] Add SPM users to `USER_SET`.
-- [ ] Add one or more Admin users to `USER_SET` with `ROLE=ADMIN`.
-- [ ] Deploy Apps Script as Web App and copy `/exec` URL.
-- [ ] Upload this project to GitHub.
-- [ ] Enable GitHub Pages through Actions.
-- [ ] Open the GitHub Pages site and save the Apps Script backend URL.
-- [ ] Test SPM login, office auto-mapping and today's duplicate protection.
-- [ ] Test kit reconciliation and article reconciliation.
-- [ ] Test Admin filters, pending offices, sessions and CSV export.
+- [ ] Create Google Sheet
+- [ ] Set Apps Script `SPREADSHEET_ID`
+- [ ] Run `setupWorkbook()`
+- [ ] Populate `OFFICE_MASTER`
+- [ ] Populate `USER_SET`
+- [ ] Deploy Apps Script Web App
+- [ ] Copy `/exec` URL
+- [ ] Upload files to GitHub repository root
+- [ ] Confirm `index.html` is at root
+- [ ] Enable GitHub Pages via Actions
+- [ ] Configure Apps Script URL in the website
+- [ ] Test SPM login and automatic office/SOL mapping
+- [ ] Test kit reconciliation
+- [ ] Test article reconciliation
+- [ ] Test duplicate submission
+- [ ] Test Admin consolidated totals
+- [ ] Test office-wise all-field report
+- [ ] Test pending offices
+- [ ] Test session/IP audit
+- [ ] Test CSV export
