@@ -1,0 +1,5 @@
+# Never commit real credentials or local deployment files
+.clasp.json
+*.local.*
+.env
+.env.*
