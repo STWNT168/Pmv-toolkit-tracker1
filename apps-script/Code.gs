@@ -40,6 +40,7 @@ function doPost(e) {
       case 'getMyRecords': result = getMyRecords(payload.sessionId, payload.limit || 30); break;
       case 'submitDaily': result = submitDaily(payload.sessionId, payload.report); break;
       case 'adminSummary': result = adminSummary(payload.sessionId, payload.filters || {}); break;
+      case 'adminConsolidatedReport': result = adminConsolidatedReport(payload.sessionId, payload.filters || {}); break;
       case 'adminSessions': result = adminSessions(payload.sessionId, payload.limit || 200); break;
       case 'getOffices': result = getOffices(payload.sessionId); break;
       case 'exportDailyCsv': result = exportDailyCsv(payload.sessionId, payload.filters || {}); break;
@@ -232,7 +233,29 @@ function adminSummary(sessionId,filters){
   },{allKits:0,similarArticle:0,invalid:0,invalidArticles:0,deliverable:0,deliverableArticles:0,incomplete:0,incompleteArticles:0,details:0,detailsArticles:0});
   const submitted={};out.forEach(r=>submitted[r.solId]=true);
   const pendingOffices=offices.filter(o=>String(o.ACTIVE).toUpperCase()!=='FALSE').filter(o=>!submitted[String(o.SOL_ID)]).map(o=>({solId:String(o.SOL_ID),officeName:String(o.OFFICE_NAME)}));
-  return {rows:out,totals,pendingOffices,totalOffices:offices.filter(o=>String(o.ACTIVE).toUpperCase()!=='FALSE').length,submittedOfficeCount:Object.keys(submitted).length};
+  const totalOffices=offices.filter(o=>String(o.ACTIVE).toUpperCase()!=='FALSE').length;
+  return {rows:out,totals,pendingOffices,pendingOfficeCount:pendingOffices.length,totalOffices,submittedOfficeCount:Object.keys(submitted).length};
+}
+
+function adminConsolidatedReport(sessionId,filters){
+  const d=adminSummary(sessionId,filters||{});
+  return {
+    period:filters||{},
+    consolidated:{
+      allKits:d.totals.allKits,
+      similarArticle:d.totals.similarArticle,
+      invalidMobileKits:d.totals.invalid,
+      invalidMobileArticles:d.totals.invalidArticles,
+      deliverableKits:d.totals.deliverable,
+      deliverableArticles:d.totals.deliverableArticles,
+      incompleteKits:d.totals.incomplete,
+      incompleteArticles:d.totals.incompleteArticles,
+      withoutProperDetailsKits:d.totals.details,
+      withoutProperDetailsArticles:d.totals.detailsArticles
+    },
+    offices:{total:d.totalOffices,submitted:d.submittedOfficeCount,pending:d.pendingOffices},
+    rows:d.rows
+  };
 }
 
 function adminSessions(sessionId,limit){
