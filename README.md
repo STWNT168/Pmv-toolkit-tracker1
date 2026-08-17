@@ -1,101 +1,96 @@
-# PMV Toolkit Tracker — Refined Secure Build
+# PMV Toolkit Tracker v8
 
-## Architecture
+A clean rebuild of the PMV Toolkit Tracker while keeping the original essence:
 
-- Frontend: GitHub Pages
-- Backend: Google Apps Script Web App
-- Database: one Google Sheets workbook
-- Frontend configuration: `js/config.js`
+- GitHub Pages frontend
+- Google Apps Script backend
+- Google Sheets database
+- SPM login with Employee ID + registered phone
+- Server-side authentication
+- Session management
+- Daily PMV toolkit/article reporting
+- Duplicate submission protection
+- Kit/article total validation
+- Admin dashboard
+- Office-wise submitted/pending status
+- Consolidated totals
+- Session audit
+- CSV export
+- Responsive mobile UI
 
-## Important configuration
+## Backend setup
 
-### 1. Apps Script spreadsheet
+1. Create/open the Google Spreadsheet.
+2. Open Apps Script.
+3. Add `Code.gs` from `apps-script/Code.gs`.
+4. Add/update `appsscript.json`.
+5. Open **Project Settings → Script Properties**.
+6. Add:
 
-Open Apps Script → Project Settings → Script Properties and create:
+   `SPREADSHEET_ID = YOUR_SPREADSHEET_ID`
 
-`SPREADSHEET_ID = YOUR_GOOGLE_SHEET_ID`
+7. Run `setupWorkbook()` once and authorize the script.
+8. Add users to `USER_SET`.
 
-The backend deliberately reads the spreadsheet ID from Script Properties instead of trusting a browser request.
+### USER_SET columns
 
-### 2. Run workbook setup
+`EMPLOYEE_ID | PHONE | ROLE | SOL_ID | ACTIVE | NAME | SESSION_DAYS`
 
-Run `setupWorkbook()` once from Apps Script.
+Example:
 
-It creates:
+`10326670 | 9876543210 | SPM | 18231301 | TRUE | Example Name | 7`
+
+Use your real authorized data in the spreadsheet. Do not put real credentials in GitHub.
+
+## Web App deployment
+
+Deploy:
+
+- Type: Web app
+- Execute as: Me
+- Who has access: Anyone
+
+Copy the `/exec` URL and put it in:
+
+`js/config.js`
+
+The supplied config already contains the `/exec` URL provided for this rebuild.
+
+## GitHub Pages
+
+Upload the contents of this project to the repository root.
+
+The GitHub Pages URL should load:
+
+`index.html`
+
+After deployment, use a fresh/incognito browser tab if the previous site cached old JavaScript.
+
+## Important architecture change
+
+The old project used a hidden iframe and an Apps Script HTML response as a bridge. This rebuild keeps that transport because direct browser `fetch()` to an Apps Script web app can run into cross-origin/redirect limitations.
+
+The response bridge now posts explicitly to `window.parent` and has a fallback to `window.top`.
+
+The frontend also has a server health action so deployment/configuration problems are easier to diagnose.
+
+## After every Code.gs change
+
+Apps Script code is deployed separately from GitHub.
+
+Always:
+
+**Deploy → Manage deployments → Edit → New version → Deploy**
+
+Then reload GitHub Pages.
+
+## Sheets
+
+The backend creates/uses:
 
 - `OFFICE_MASTER`
 - `USER_SET`
 - `DAILY_RECORD`
 - `SESSION_LOG`
 
-Then populate `USER_SET`:
-
-`EMPLOYEE_ID | PHONE | ROLE | SOL_ID | ACTIVE | NAME | SESSION_DAYS`
-
-Use `ROLE=SPM` or `ROLE=ADMIN`.
-
-### 3. Deploy Apps Script
-
-Deploy as Web App:
-
-- Execute as: Me / User deploying the web app
-- Who has access: Anyone
-
-Copy the generated `/exec` URL.
-
-### 4. Configure GitHub Pages
-
-Open:
-
-`js/config.js`
-
-Set:
-
-`APP_SCRIPT_API_URL: 'https://script.google.com/macros/s/XXXXX/exec'`
-
-`SPREADSHEET_ID` is provided as a reference field, but the backend does not use the browser value. Keep the real spreadsheet ID in Apps Script Script Properties.
-
-## Security improvements in this build
-
-- Server-side session validation
-- Role-based SPM/Admin authorization
-- Session expiry capped at 7 days
-- Server-side duplicate submission prevention
-- Script Lock around submission
-- Server-side numeric range validation
-- Server-side kit reconciliation
-- Server-side article reconciliation
-- Login rate limiting
-- Inactive-user blocking
-- Session/IP/user-agent audit
-- HTML escaping on dashboard output
-- Request IDs for iframe responses
-- No direct Google Sheet access from browser
-- No spreadsheet ID used as an authentication credential
-
-## Known inconsistency fixed
-
-The previous frontend contained:
-
-`async async function loadDashboard()`
-
-This is invalid JavaScript and can stop the entire page script from parsing.
-
-The refined build contains:
-
-`async function loadDashboard()`
-
-## Deployment check
-
-1. Configure Script Property `SPREADSHEET_ID`.
-2. Run `setupWorkbook()`.
-3. Fill `USER_SET`.
-4. Deploy Apps Script and copy `/exec`.
-5. Put the `/exec` URL in `js/config.js`.
-6. Push the files to GitHub.
-7. Enable GitHub Pages.
-8. Test SPM login.
-9. Test one valid submission.
-10. Confirm duplicate submission is blocked.
-11. Test Admin login.
-12. Test consolidated report and pending-office list.
+Do not rename these sheets without changing `Code.gs`.

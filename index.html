@@ -6,10 +6,11 @@
 <meta name="theme-color" content="#12385b">
 <meta name="description" content="PMV Toolkit Tracker — secure reporting portal">
 <title>PMV Toolkit Tracker</title>
-<link rel="stylesheet" href="css/app.css?v=7">
-<script src="js/config.js?v=7"></script>
+<link rel="stylesheet" href="css/app.css?v=8">
+<script src="js/config.js?v=8"></script>
 </head>
 <body>
+
 <section id="loginScreen" class="login-shell">
   <div class="card login-card">
     <div class="brand-row">
@@ -20,13 +21,27 @@
         <p class="subtitle">Udhampur Division · Secure Reporting Portal</p>
       </div>
     </div>
+
     <div id="loginErr" class="alert error hidden"></div>
+
     <div class="grid" style="margin-top:20px">
-      <div><label>Employee ID</label><input id="employeeId" autocomplete="username" maxlength="30"></div>
-      <div><label>Registered Phone Number</label><input id="phone" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel"></div>
+      <div>
+        <label for="employeeId">Employee ID</label>
+        <input id="employeeId" autocomplete="username" maxlength="30">
+      </div>
+      <div>
+        <label for="phone">Registered Phone Number</label>
+        <input id="phone" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel">
+      </div>
     </div>
-    <button id="loginBtn" style="width:100%;margin-top:18px" onclick="doLogin()">SIGN IN</button>
-    <p class="muted" style="font-size:11px;margin:14px 0 0">Authorized SPM and Admin users only. Authentication and validation are enforced by the server.</p>
+
+    <button id="loginBtn" class="primary-full" onclick="doLogin()">SIGN IN</button>
+
+    <p class="muted legal">
+      Authorized SPM and Admin users only. Authentication and validation are enforced by the server.
+    </p>
+
+    <div id="health" class="health">Checking server…</div>
   </div>
 </section>
 
@@ -34,12 +49,12 @@
 <header class="topbar">
   <div class="topbar-row">
     <div>
-      <p class="eyebrow" style="color:#d8e4ee">PMV TOOLKIT MANAGEMENT</p>
-      <h1 style="color:#fff">Daily Monitoring Portal</h1>
-      <div id="who" class="muted"></div>
+      <p class="eyebrow top-eyebrow">PMV TOOLKIT MANAGEMENT</p>
+      <h1 class="white">Daily Monitoring Portal</h1>
+      <div id="who" class="top-user"></div>
     </div>
     <div class="actions">
-      <button class="outline" style="background:transparent;color:#fff;border-color:#b8cad9" onclick="refreshCurrent()">Refresh</button>
+      <button class="outline dark-outline" onclick="refreshCurrent()">Refresh</button>
       <button class="danger" onclick="doLogout()">Logout</button>
     </div>
   </div>
@@ -48,9 +63,14 @@
 <section id="spmView" class="hidden">
   <div class="card">
     <div class="panel-head">
-      <div><p class="panel-kicker">FIELD REPORTING</p><h2>Today's Toolkit Position</h2><p class="muted">Submit once per office per day. All totals are checked again on the server.</p></div>
+      <div>
+        <p class="panel-kicker">FIELD REPORTING</p>
+        <h2>Today's Toolkit Position</h2>
+        <p class="muted">Submit once per office per day. Totals are checked again on the server.</p>
+      </div>
       <span class="role">SPM</span>
     </div>
+
     <div class="grid">
       <div><label>SOL ID</label><input id="solId" readonly></div>
       <div><label>Office Name</label><input id="officeName" readonly></div>
@@ -63,47 +83,69 @@
       <div><label>All Kits / Total Kits</label><input id="allKits" type="number" min="0" max="1000000"></div>
       <div><label>Similar Article / Tool Kit Article</label><input id="similarArticle" type="number" min="0" max="1000000"></div>
     </div>
-    <div class="grid" style="margin-top:14px">
-      <div><h3>Kit Counts</h3><div class="grid">
-        <div><label>Invalid Mobile</label><input id="invalidMobileKits" type="number" min="0"></div>
-        <div><label>Deliverable</label><input id="deliverableKits" type="number" min="0"></div>
-        <div><label>Incomplete</label><input id="incompleteKits" type="number" min="0"></div>
-        <div><label>Without Proper Details / Address</label><input id="withoutProperDetailsKits" type="number" min="0"></div>
-      </div></div>
-      <div><h3>Article Counts</h3><div class="grid">
-        <div><label>Invalid Mobile</label><input id="invalidMobileArticles" type="number" min="0"></div>
-        <div><label>Deliverable</label><input id="deliverableArticles" type="number" min="0"></div>
-        <div><label>Incomplete</label><input id="incompleteArticles" type="number" min="0"></div>
-        <div><label>Without Proper Details / Address</label><input id="withoutProperDetailsArticles" type="number" min="0"></div>
-      </div></div>
+
+    <div class="grid section-gap">
+      <div>
+        <h3>Kit Counts</h3>
+        <div class="grid">
+          <div><label>Invalid Mobile</label><input id="invalidMobileKits" type="number" min="0" max="1000000"></div>
+          <div><label>Deliverable</label><input id="deliverableKits" type="number" min="0" max="1000000"></div>
+          <div><label>Incomplete</label><input id="incompleteKits" type="number" min="0" max="1000000"></div>
+          <div><label>Without Proper Details / Address</label><input id="withoutProperDetailsKits" type="number" min="0" max="1000000"></div>
+        </div>
+      </div>
+
+      <div>
+        <h3>Article Counts</h3>
+        <div class="grid">
+          <div><label>Invalid Mobile</label><input id="invalidMobileArticles" type="number" min="0" max="1000000"></div>
+          <div><label>Deliverable</label><input id="deliverableArticles" type="number" min="0" max="1000000"></div>
+          <div><label>Incomplete</label><input id="incompleteArticles" type="number" min="0" max="1000000"></div>
+          <div><label>Without Proper Details / Address</label><input id="withoutProperDetailsArticles" type="number" min="0" max="1000000"></div>
+        </div>
+      </div>
     </div>
-    <div class="actions" style="margin-top:18px">
+
+    <div class="actions section-gap">
       <button id="submitBtn" onclick="submitReport()">Submit Today's Report</button>
       <button class="outline" onclick="clearEntry()">Clear</button>
     </div>
   </div>
 
   <div class="card">
-    <div class="panel-head"><div><p class="panel-kicker">HISTORY</p><h2>My Previous Submissions</h2></div><button class="secondary" onclick="loadMyRecords()">Refresh</button></div>
+    <div class="panel-head">
+      <div><p class="panel-kicker">HISTORY</p><h2>My Previous Submissions</h2></div>
+      <button class="secondary" onclick="loadMyRecords()">Refresh</button>
+    </div>
     <div class="table-wrap"><table id="myTable"></table></div>
   </div>
 </section>
 
 <section id="adminView" class="hidden">
   <div class="card">
-    <div class="panel-head"><div><p class="panel-kicker">ADMINISTRATION</p><h2>PMV Toolkit Command Dashboard</h2><p class="muted">Classic office-wise monitoring view for reporting and delivery position.</p></div><span class="role">ADMIN</span></div>
+    <div class="panel-head">
+      <div>
+        <p class="panel-kicker">ADMINISTRATION</p>
+        <h2>PMV Toolkit Command Dashboard</h2>
+        <p class="muted">Classic office-wise monitoring view for reporting and delivery position.</p>
+      </div>
+      <span class="role">ADMIN</span>
+    </div>
+
     <div class="grid-4">
       <div><label>From</label><input id="fromDate" type="date"></div>
       <div><label>To</label><input id="toDate" type="date"></div>
       <div><label>Specific Date</label><input id="specificDate" type="date"></div>
       <div><label>Office</label><select id="filterSol"><option value="">All offices</option></select></div>
     </div>
-    <div class="actions" style="margin-top:14px">
+
+    <div class="actions section-gap">
       <button onclick="loadDashboard()">Load Dashboard</button>
       <button class="secondary" onclick="downloadCsv()">Export CSV</button>
       <button class="outline" onclick="loadSessions()">Session Audit</button>
     </div>
   </div>
+
   <div id="adminMsg" class="hidden"></div>
 
   <div class="kpis">
@@ -113,17 +155,36 @@
     <div class="kpi"><small>REPORTING COMPLETION</small><strong id="kCompletion">0%</strong><div class="progress"><span id="kProgress" style="width:0%"></span></div></div>
   </div>
 
-  <div class="card"><div class="panel-head"><div><p class="panel-kicker">CONSOLIDATED POSITION</p><h2>Toolkit & Article Totals</h2></div></div><div id="stats" class="kpis"></div></div>
-  <div class="card"><div class="panel-head"><div><p class="panel-kicker">OFFICE-WISE</p><h2>Reporting & Delivery Position</h2></div></div><div class="table-wrap"><table id="reportTable"></table></div></div>
-  <div class="card"><div class="panel-head"><div><p class="panel-kicker">FIELD-WISE SUMMARY</p><h2>Distribution of Reported Kits</h2></div></div><div id="bars"></div></div>
-  <div class="card"><div class="panel-head"><div><p class="panel-kicker">ACTION REQUIRED</p><h2>Offices Not Submitted</h2></div></div><div class="table-wrap"><table id="pendingTable"></table></div></div>
-  <div class="card hidden" id="sessionPanel"><div class="panel-head"><div><p class="panel-kicker">SECURITY AUDIT</p><h2>Recent Sessions</h2></div></div><div class="table-wrap"><table id="sessionTable"></table></div></div>
+  <div class="card">
+    <div class="panel-head"><div><p class="panel-kicker">CONSOLIDATED POSITION</p><h2>Toolkit & Article Totals</h2></div></div>
+    <div id="stats" class="kpis"></div>
+  </div>
+
+  <div class="card">
+    <div class="panel-head"><div><p class="panel-kicker">OFFICE-WISE</p><h2>Reporting & Delivery Position</h2></div></div>
+    <div class="table-wrap"><table id="reportTable"></table></div>
+  </div>
+
+  <div class="card">
+    <div class="panel-head"><div><p class="panel-kicker">FIELD-WISE SUMMARY</p><h2>Distribution of Reported Kits</h2></div></div>
+    <div id="bars"></div>
+  </div>
+
+  <div class="card">
+    <div class="panel-head"><div><p class="panel-kicker">ACTION REQUIRED</p><h2>Offices Not Submitted</h2></div></div>
+    <div class="table-wrap"><table id="pendingTable"></table></div>
+  </div>
+
+  <div class="card hidden" id="sessionPanel">
+    <div class="panel-head"><div><p class="panel-kicker">SECURITY AUDIT</p><h2>Recent Sessions</h2></div></div>
+    <div class="table-wrap"><table id="sessionTable"></table></div>
+  </div>
 </section>
 
 <footer class="footer">PMV Toolkit Tracker · Udhampur Division · Server-side validation, role control and session security enabled</footer>
 </main>
 
-<iframe id="bridge" name="bridge" style="display:none"></iframe>
-<script src="js/app.js?v=7"></script>
+<iframe id="bridge" name="bridge" class="bridge" title="API bridge"></iframe>
+<script src="js/app.js?v=8"></script>
 </body>
 </html>
