@@ -607,14 +607,39 @@ function refreshCurrent() {
 async function checkServerHealth() {
   try {
     const result = await request('health', {});
+
+    if (result && result.database && result.database.ok) {
+      $('health').textContent =
+        '● Server + Spreadsheet connected';
+      $('health').className = 'health online';
+      return;
+    }
+
+    const message =
+      result &&
+      result.database &&
+      result.database.message
+        ? result.database.message
+        : 'Spreadsheet connection failed.';
+
     $('health').textContent =
-      result && result.ok
-        ? '● Server connected'
-        : '● Server responded';
-    $('health').className = 'health online';
-  } catch (err) {
-    $('health').textContent = '● Server connection unavailable';
+      '● Database unavailable';
     $('health').className = 'health offline';
+
+    alertBox('loginErr', message, 'error');
+
+  } catch (err) {
+    $('health').textContent =
+      '● Backend unavailable';
+    $('health').className =
+      'health offline';
+
+    alertBox(
+      'loginErr',
+      err.message ||
+        'Apps Script Web App is not responding.',
+      'error'
+    );
   }
 }
 
