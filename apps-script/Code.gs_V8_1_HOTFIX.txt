@@ -1,0 +1,199 @@
+PMV TOOLKIT TRACKER v8.1 DATABASE/DEPLOYMENT HOTFIX
+====================================================
+
+This package is designed to be applied to the existing GitHub repository.
+
+1) Apps Script: apps-script/Code.gs
+-----------------------------------
+Add the following helper functions:
+
+function backendHealth_() {
+  const started = Date.now();
+  try {
+    const id = String(
+      PropertiesService.getScriptProperties()
+        .getProperty('SPREADSHEET_ID') || ''
+    ).trim();
+
+    if (!id) {
+      throw new Error(
+        'DATABASE CONFIGURATION ERROR: SPREADSHEET_ID is missing.'
+      );
+    }
+
+    const ss = SpreadsheetApp.openById(id);
+    const required = [
+      'OFFICE_MASTER',
+      'USER_SET',
+      'DAILY_RECORD',
+      'SESSION_LOG'
+    ];
+
+    const missing = required.filter(
+      name => !ss.getSheetByName(name)
+    );
+
+    if (missing.length) {
+      throw new Error(
+        'Missing required sheet(s): ' + missing.join(', ')
+      );
+    }
+
+    return {
+      ok: true,
+      service: 'PMV Toolkit Tracker API',
+      version: '8.1.0',
+      database: {
+        ok: true,
+        spreadsheetName: ss.getName(),
+        spreadsheetIdConfigured: true,
+        requiredSheets: required,
+        missingSheets: []
+      },
+      latencyMs: Date.now() - started,
+      serverTime: new Date().toISOString()
+    };
+
+  } catch (err) {
+    return {
+      ok: false,
+      service: 'PMV Toolkit Tracker API',
+      version: '8.1.0',
+      database: {
+        ok: false,
+        spreadsheetIdConfigured: !!String(
+          PropertiesService.getScriptProperties()
+            .getProperty('SPREADSHEET_ID') || ''
+        ).trim(),
+        message: String(err && err.message || err)
+      },
+      latencyMs: Date.now() - started,
+      serverTime: new Date().toISOString()
+    };
+  }
+}
+
+Replace the existing doPost() health case:
+
+case 'health':
+  result = {
+    ok: true,
+    service: 'PMV Toolkit Tracker API',
+    version: '8.0.0',
+    time: new Date().toISOString()
+  };
+  break;
+
+WITH:
+
+case 'health':
+  result = backendHealth_();
+  break;
+
+Also replace getSS_() with:
+
+function getSS_() {
+  const id = String(
+    PropertiesService.getScriptProperties()
+      .getProperty('SPREADSHEET_ID') || ''
+  ).trim();
+
+  if (!id) {
+    throw new Error(
+      'DATABASE CONFIGURATION ERROR: SPREADSHEET_ID is missing.'
+    );
+  }
+
+  try {
+    return SpreadsheetApp.openById(id);
+  } catch (err) {
+    throw new Error(
+      'DATABASE ACCESS ERROR: Unable to open Spreadsheet. ' +
+      'Verify SPREADSHEET_ID and Apps Script authorization.'
+    );
+  }
+}
+
+2) Frontend: js/app.js
+----------------------
+Replace checkServerHealth() with:
+
+async function checkServerHealth() {
+  try {
+    const result = await request('health', {});
+
+    if (result && result.database && result.database.ok) {
+      $('health').textContent =
+        '● Server + Spreadsheet connected';
+      $('health').className = 'health online';
+      return;
+    }
+
+    const message =
+      result &&
+      result.database &&
+      result.database.message
+        ? result.database.message
+        : 'Spreadsheet connection failed.';
+
+    $('health').textContent =
+      '● Database unavailable';
+    $('health').className = 'health offline';
+
+    alertBox('loginErr', message, 'error');
+
+  } catch (err) {
+    $('health').textContent =
+      '● Backend unavailable';
+    $('health').className =
+      'health offline';
+
+    alertBox(
+      'loginErr',
+      err.message ||
+        'Apps Script Web App is not responding.',
+      'error'
+    );
+  }
+}
+
+3) Apps Script configuration
+----------------------------
+Apps Script > Project Settings > Script Properties:
+
+SPREADSHEET_ID =
+1WS-W2P25dEHIaMKS2P9L2JW2JHBIU8z11eyRiJzbRLE
+
+Run setupWorkbook() once.
+
+Required sheets:
+OFFICE_MASTER
+USER_SET
+DAILY_RECORD
+SESSION_LOG
+
+4) Redeploy
+------------
+Deploy > Manage deployments > Edit Web app
+Execute as: Me
+Who has access: Anyone
+Create a NEW VERSION
+Deploy.
+
+Copy the new /exec URL into js/config.js.
+
+5) GitHub
+---------
+Replace js/config.js with the file in this package.
+Apply the two Code.gs changes above.
+Commit/push.
+Clear browser cache or use Incognito.
+
+EXPECTED HEALTH STATUS:
+● Server + Spreadsheet connected
+
+If not connected, the new error will identify:
+- missing SPREADSHEET_ID
+- spreadsheet access/authorization
+- missing required sheets
+- backend unavailable
