@@ -25,13 +25,25 @@ const CFG = Object.freeze({
 });
 
 function getSS_() {
-  const id = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');
+  const id = String(
+    PropertiesService.getScriptProperties()
+      .getProperty('SPREADSHEET_ID') || ''
+  ).trim();
+
   if (!id) {
     throw new Error(
-      'Backend is not configured. Add SPREADSHEET_ID in Apps Script Script Properties.'
+      'DATABASE CONFIGURATION ERROR: SPREADSHEET_ID is missing.'
     );
   }
-  return SpreadsheetApp.openById(id);
+
+  try {
+    return SpreadsheetApp.openById(id);
+  } catch (err) {
+    throw new Error(
+      'DATABASE ACCESS ERROR: Unable to open Spreadsheet. ' +
+      'Verify SPREADSHEET_ID and Apps Script authorization.'
+    );
+  }
 }
 
 function doGet(e) {
@@ -73,11 +85,8 @@ function doPost(e) {
 
     switch (action) {
       case 'health':
-        result = {
-          ok: true,
-          service: 'PMV Toolkit Tracker API',
-          version: '8.0.0',
-          time: new Date().toISOString()
+  result = backendHealth_();
+  break;
         };
         break;
 
@@ -971,4 +980,69 @@ function csv_(value) {
   return '"' +
     String(value == null ? '' : value).replace(/"/g, '""') +
     '"';
+}
+function backendHealth_() {
+  const started = Date.now();
+  try {
+    const id = String(
+      PropertiesService.getScriptProperties()
+        .getProperty('SPREADSHEET_ID') || ''
+    ).trim();
+
+    if (!id) {
+      throw new Error(
+        'DATABASE CONFIGURATION ERROR: SPREADSHEET_ID is missing.'
+      );
+    }
+
+    const ss = SpreadsheetApp.openById(id);
+    const required = [
+      'OFFICE_MASTER',
+      'USER_SET',
+      'DAILY_RECORD',
+      'SESSION_LOG'
+    ];
+
+    const missing = required.filter(
+      name => !ss.getSheetByName(name)
+    );
+
+    if (missing.length) {
+      throw new Error(
+        'Missing required sheet(s): ' + missing.join(', ')
+      );
+    }
+
+    return {
+      ok: true,
+      service: 'PMV Toolkit Tracker API',
+      version: '8.1.0',
+      database: {
+        ok: true,
+        spreadsheetName: ss.getName(),
+        spreadsheetIdConfigured: true,
+        requiredSheets: required,
+        missingSheets: []
+      },
+      latencyMs: Date.now() - started,
+      serverTime: new Date().toISOString()
+    };
+
+  } catch (err) {
+    return {
+      ok: false,
+      service: 'PMV Toolkit Tracker API',
+      version: '8.1.0',
+      database: {
+        ok: false,
+        spreadsheetIdConfigured: !!String(
+          PropertiesService.getScriptProperties()
+            .getProperty('SPREADSHEET_ID') || ''
+        ).trim(),
+        message: String(err && err.message || err)
+      },
+      latencyMs: Date.now() - started,
+      serverTime: new Date().toISOString()
+    };
+  }
 }
